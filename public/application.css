@@ -1,14 +1,15 @@
-/*
- * application.css
- *= require bootstrap
- *= require bootstrap-responsive
- *= require custom
- *= require_self
-*/
+body {
+  padding: 10px 20px;
+  margin: 20px;
+
+}
 
 .person-info {
   background-color: #eee;
-  padding: 5px 15px;
+  padding: 20px 15px;
   margin: 20px 0px;
-  height: 120px;
+}
+
+.button.radius {
+  border-radius: 5px;
 }
