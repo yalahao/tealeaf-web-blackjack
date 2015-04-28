@@ -87,8 +87,9 @@ get '/game' do
 end
 
 post '/game/player/hit' do
-  session
-
+  deal_card_to("player")
+  @hit_msg = "#{session[:player_name]} hit and got #{session[:player_cards].last}"
+  erb :game
 end
 
 post '/game/player/double_down' do

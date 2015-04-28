@@ -13,8 +13,8 @@
   <body>
     <h2>The Blackjack Game</h2>
     <%= yield %>
-    <%if @error %>
-      <div class="alert alert-error"><%=@error%></div>
+    <%if @hit_msg %>
+      <div class="alert alert-error"><%= @hit_msg %></div>
     <% end %>
   </body>
 </html>

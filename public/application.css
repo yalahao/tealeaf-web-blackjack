@@ -10,6 +10,6 @@ body {
   margin: 20px 0px;
 }
 
-.button.radius {
-  border-radius: 5px;
+.radius {
+  border-radius: 20px;
 }
