@@ -3,56 +3,38 @@
 <div class="person-info" id="player-info">
   <div class="row">
     <div class="large-2 columns">
-      <h3><%= session[:player_name] %></h3>
+      <h4><%= session[:player_name] %></h4>
+    </div>
+    <div class="large-10 columns">
+      <h4>Cards:</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns">
       <p>Money: $<%= session[:money] %></p>
       <p>Current bet: $<%= session[:bet] %></p>
     </div>
     <div class="large-10 columns">
-      <div class='row'>
-        <h3>Cards:</h3>
-      </div>
-      <div class = 'row'>
-        <div class="large-1 columns">
-          <p>Card 1</p>
-        </div>
-        <div class="large-1 columns">
-          <p>Card 2</p>
-        </div>
-        <div class="large-1 columns">
-          <p>Card 3</p>
-        </div>
-        <div class="large-1 columns">
-          <p></p>
-        </div>
-      </div>
+        <p><%= session[:player_cards][0][0] %><%= session[:player_cards][0][1] %></p>
     </div>
   </div>
 </div>
 
-
 <div class="person-info" id="dealer-info">
   <div class="row">
     <div class="large-2 columns">
-      <h3>Dealer</h3>
+      <h4>Dealer</h4>
     </div>
     <div class="large-10 columns">
-      <div class='row'>
-        <h3>Cards:</h3>
-      </div>
-      <div class = 'row'>
-        <div class="large-1 columns">
-          <p>Card 1</p>
-        </div>
-        <div class="large-1 columns">
-          <p>Card 2</p>
-        </div>
-        <div class="large-1 columns">
-          <p>Card 3</p>
-        </div>
-        <div class="large-1 columns">
-          <p></p>
-        </div>
-      </div>
+      <h4>Cards:</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns">
+      <p></p>
+    </div>
+    <div class="large-10 columns">
+        <p><%= session[:player_cards][0][0] %><%= session[:player_cards][0][1] %></p>
     </div>
   </div>
 </div>

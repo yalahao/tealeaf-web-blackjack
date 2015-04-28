@@ -5,13 +5,23 @@ require 'pry'
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
                            :secret => 'dark_knight_rises'
+
+CLUB = "\u2664 ".encode('utf-8')
+HEART = "\u2661 ".encode('utf-8')
+SPADE = "\u2667 ".encode('utf-8')
+DIAMOND= "\u2662 ".encode('utf-8')
+
 helpers do
 
 end
 
 
 get '/' do
-  redirect '/new'
+  if session[:player_name]
+    redirect '/game'
+  else
+    redirect '/new'
+  end
 end
 
 get '/new' do
@@ -27,7 +37,7 @@ post '/set_name' do
 end
 
 get '/game' do
-  session[:deck] = [['C', 2], ['D', 3]]
+  session[:deck] = [[DIAMOND, 2], [CLUB, 3]]
   session[:player_cards] = []
   session[:player_cards] << session[:deck].pop
 
