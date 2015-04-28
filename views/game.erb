@@ -15,7 +15,11 @@
       <p>Current bet: $<%= session[:bet] %></p>
     </div>
     <div class="large-10 columns">
-        <p><%= session[:player_cards][0][0] %><%= session[:player_cards][0][1] %></p>
+      <p>
+        <% session[:player_cards].each do |card| %>
+          <%= display(card) %>
+        <% end %>
+      </p>
     </div>
   </div>
 </div>
@@ -34,7 +38,11 @@
       <p></p>
     </div>
     <div class="large-10 columns">
-        <p><%= session[:player_cards][0][0] %><%= session[:player_cards][0][1] %></p>
+      <p>
+        <% session[:dealer_cards].each do |card| %>
+          <%= display(card) %>
+        <% end %>
+      </p>
     </div>
   </div>
 </div>
@@ -48,3 +56,7 @@
 <div class="updates">
   <p>Hal hit. It's A of Diamond!</p>
 </div>
+
+<% session[:deck].each do |card| %>
+  <%= display(card) %>
+<% end %>
