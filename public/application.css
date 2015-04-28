@@ -1,0 +1,14 @@
+/*
+ * application.css
+ *= require bootstrap
+ *= require bootstrap-responsive
+ *= require custom
+ *= require_self
+*/
+
+.person-info {
+  background-color: #eee;
+  padding: 5px 15px;
+  margin: 20px 0px;
+  height: 120px;
+}

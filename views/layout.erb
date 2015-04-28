@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>The Blackjack Game</title>
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/application.css">
+  </head>
+  <body style="padding-top: 50px;">
+
+
+  <div class="container">
+    <h1>The Blackjack Game</h1>
+    <%= yield %>
+    <%if @error %>
+      <div class="alert alert-error"><%=@error%></div>
+    <% end %>
+  </div>
+  </body>
+</html>

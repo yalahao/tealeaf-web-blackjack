@@ -1,0 +1,58 @@
+<h2>Round <%= session[:num_rounds] %>, <%= session[:player_name] %>'s turn</h2>
+
+<div class="person-info" id="player-info">
+  <div class="row">
+    <div class="col-md-2">
+      <h3><%= session[:player_name] %></h3>
+      <p>Money: $<%= session[:money] %></p>
+      <p>Current bet: $<%= session[:bet] %></p>
+    </div>
+    <div class="col-md-10">
+      <div class='row'>
+        <h3>Cards:</h3>
+      </div>
+      <div class = 'row'>
+        <div class="col-md-1">
+          <p>Card 1</p>
+        </div>
+        <div class="col-md-1">
+          <p>Card 2</p>
+        </div>
+        <div class="col-md-1">
+          <p>Card 3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="person-info" id="dealer-info">
+  <div class="row">
+    <div class="col-md-2">
+      <h3>Dealer</h3>
+    </div>
+    <div class="col-md-10">
+      <div class='row'>
+        <h3>Cards:</h3>
+      </div>
+      <div class = 'row'>
+        <div class="col-md-1">
+          <p>Card 1</p>
+        </div>
+        <div class="col-md-1">
+          <p>Card 2</p>
+        </div>
+        <div class="col-md-1">
+          <p>Card 3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="player-choice">
+  <button>Hit</button>
+  <button>Double down</button>
+  <button>Stay</button>
+</div>
