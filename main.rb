@@ -22,6 +22,38 @@ helpers do
     "[ #{card[0]} #{card[1]} ]"
   end
 
+  def score(hand)
+    arr = []
+    hand.each {|card| arr << card[1]}
+    total = 0
+    num_a =0
+    arr.each do |rank|
+      if rank == 'A'
+        total += 11
+        num_a += 1
+      elsif %w{J Q K}.include?(rank)
+        total += 10
+      else
+        total += rank.to_i
+      end
+    end
+    #correct for Aces
+    num_a.times do
+      break if total <= 21
+      total -= 10
+    end
+    total
+  end
+
+  def deal_card_to(person)
+    session[:player_cards] << session[:deck].pop if person == "player"
+    session[:dealer_cards] << session[:deck].pop if person == "dealer"
+  end
+
+end
+
+before do
+
 end
 
 
@@ -49,7 +81,20 @@ get '/game' do
   session[:deck] = SUITS.product(RANKS).shuffle!
   session[:player_cards] = []
   session[:dealer_cards] = []
-  2.times {session[:player_cards] << session[:deck].pop}
-  2.times {session[:dealer_cards] << session[:deck].pop}
+  2.times {deal_card_to("player")}
+  2.times {deal_card_to("dealer")}
   erb :game
+end
+
+post '/game/player/hit' do
+  session
+
+end
+
+post '/game/player/double_down' do
+
+end
+
+post '/game/player/stay' do
+
 end
