@@ -75,7 +75,7 @@
       <form action="/game/player/hit" method="post">
         <input type="submit" class="button" value="Hit" />
       </form>
-      <%if (session[:money] >= session[:bet]) && (session[:player_cards].count > 2) %>
+      <% if (session[:money] >= session[:bet]) && (!session[:player_cards].empty?) %>
         <form action="/game/player/double_down" method='post'>
           <input type="submit" class="button warning" value="Double down" />
         </form>
@@ -118,7 +118,7 @@
       <input type="submit" class="button" value="Play Again" />
     </form>
     <form action="/game/end" method='post'>
-      <input type="submit" class="button warning" value="Leave" />
+      <input type="submit" class="button alert" value="Leave" />
     </form>
   </div>
 <% end %>
