@@ -12,7 +12,7 @@ SPADE = "\u2667 ".encode('utf-8')
 DIAMOND= "\u2662 ".encode('utf-8')
 SUITS = [CLUB, HEART, SPADE, DIAMOND]
 RANKS = %w{A 2 3 4 5 6 7 8 9 J Q K}
-MAX_BET = 100
+BET_LIMIT = 100
 DECKS_OF_CARDS = 2
 BLACKJACK = 21
 DELAY = 1
@@ -50,6 +50,11 @@ helpers do
     session[:dealer_cards] << session[:deck].pop if person == "dealer"
   end
 
+  def check_player_score
+    if score(session[:player_cards]) > 21
+      @busted_msg = "#{session[:player_name]} busted and lost #{session[:bet]}..."
+    end
+  end
 end
 
 before do
@@ -82,23 +87,33 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] = []
   session[:bet] = 0
-  @set_bet = true    
+  @set_bet = true
+  @max_bet = [BET_LIMIT, session[:money]].min
   2.times {deal_card_to("player")}
   2.times {deal_card_to("dealer")}
+  erb :game
+end
+
+post '/game/player/set_bet' do
+  session[:bet] = params[:bet].to_i
+  session[:money] -= session[:bet]
   erb :game
 end
 
 post '/game/player/hit' do
   deal_card_to("player")
   @hit_msg = "#{session[:player_name]} hit. It's #{display(session[:player_cards].last)} ."
-  if score(session[:player_cards]) > 21
-    @busted_msg = "#{session[:player_name]} busted and lost #{session[:bet]}..."
-  end
+  check_player_score
   erb :game
 end
 
 post '/game/player/double_down' do
-
+  session[:money] -= session[:bet]
+  session[:bet] *= 2
+  deal_card_to("player")
+  @hit_msg = "#{session[:player_name]} doubled the bet to #{session[:bet]} and got #{display(session[:player_cards].last)} ."
+  check_player_score
+  erb :game
 end
 
 post '/game/player/stay' do

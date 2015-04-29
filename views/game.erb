@@ -48,16 +48,27 @@
 </div>
 
 <%if @set_bet %>
-
+  <form action="/game/player/set_bet" method="post">
+    <div class="row">
+      <div class="large-4 columns">
+        <label>How much does <%= session[:player_name] %> want to bet?</label>
+        <input type="number" name="bet" min="1" max="<%= @max_bet %>" required placeholder="Min $1. Max $<%= @max_bet %>."/>
+        <input type="submit" class="button" value="Bet" />
+      </div>
+    </div>
+  </form>
 <% end %>
-<%if !@busted_msg %>
+
+<%if !@set_bet && !@busted_msg %>
   <div class="button-group round">
     <form action="/game/player/hit" method="post">
       <input type="submit" class="button" value="Hit" />
     </form>
-    <form action="/game/player/double_down" method='post'>
-      <input type="submit" class="button alert" value="Double down" />
-    </form>
+    <%if (session[:money] >= session[:bet]) && (session[:player_cards].count > 2) %>
+      <form action="/game/player/double_down" method='post'>
+        <input type="submit" class="button alert" value="Double down" />
+      </form>
+    <% end %>
     <form action="/game/player/stay" method='post'>
       <input type="submit" class="button success" value="Stay" />
     </form>
