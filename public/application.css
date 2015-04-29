@@ -1,13 +1,26 @@
 body {
   padding: 10px 20px;
   margin: 20px;
+  font-size: 14px;
+}
 
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
 }
 
 .person-info {
   background-color: #eee;
   padding: 10px 15px;
   margin: 10px 0px;
+
+}
+
+.person-info p {
+  font-size: 14px;
 }
 
 .radius {
@@ -15,13 +28,15 @@ body {
 }
 
 .alert-box {
-  font-size: 16px;
-
   -webkit-animation: fadein 1.5s; /* Safari, Chrome and Opera > 12.1 */
        -moz-animation: fadein 1.5s; /* Firefox < 16 */
         -ms-animation: fadein 1.5s; /* Internet Explorer */
          -o-animation: fadein 1.5s; /* Opera < 12.1 */
             animation: fadein 1.5s;
+}
+
+.alert-box p {
+  font-size: 13px;
 }
 
 @keyframes fadein {

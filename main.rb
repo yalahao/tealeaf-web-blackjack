@@ -66,6 +66,8 @@ helpers do
       @win_msg = "#{session[:player_name]} hit blackjack and won $#{session[:bet]}!"
     elsif score(session[:dealer_cards]) == 21
       @lose_msg = "Dealer hit blackjack! #{session[:player_name]} lost $#{session[:bet]}..."
+    elsif score(session[:dealer_cards]) > 21
+      @win_msg = "Dealer busted! #{session[:player_name]} won $#{session[:bet]}!"
     end
     update_bet
   end
@@ -74,9 +76,7 @@ helpers do
     player_score = score(session[:player_cards])
     dealer_score = score(session[:dealer_cards])
     scores_msg = "#{session[:player_name]} scored #{player_score}. Dealer scored #{dealer_score}. "
-    if dealer_score > 21
-      @win_msg = "Dealer busted! #{session[:player_name]} won $#{session[:bet]}!"
-    elsif player_score > dealer_score
+    if player_score > dealer_score
       @win_msg = scores_msg + "#{session[:player_name]} won $#{session[:bet]}!"
     elsif player_score < dealer_score
       @lose_msg = scores_msg + "#{session[:player_name]} lost $#{session[:bet]}!"
@@ -105,12 +105,14 @@ helpers do
   def dealer_choice
     if score(session[:dealer_cards]) < [17, score(session[:player_cards])].max
       deal_card_to("dealer")
-      dealer_choice
-      erb :game
-    else
-      @update_msg = "Dealer stayed."
+      check_scores
+      @update_msg = "Dealer hit. It's #{description(session[:dealer_cards].last)}."
+    elsif score(session[:dealer_cards]) > 21
       session[:turn] = "end_game"
-      redirect "/end_game"
+      redirect '/end_game'
+    else
+      session[:turn] = "end_game"
+      @update_msg = "Dealer stayed."
     end
   end
 
@@ -176,7 +178,7 @@ end
 
 post '/game/player/hit' do
   deal_card_to("player")
-  @update_msg = "#{session[:player_name]} hit. It's #{description(session[:player_cards].last)} ."
+  @update_msg = "#{session[:player_name]} hit. It's #{description(session[:player_cards].last)}."
   erb :game
 end
 
@@ -199,7 +201,18 @@ post '/game/again' do
   redirect "/game"
 end
 
+post '/game/dealer/action' do
+  check_scores
+  if (!@win_msg && !@lose_msg)
+    dealer_choice
+  else
+    redirect '/end_game'
+  end
+  erb :game
+end
+
 get '/end_game' do
+  session[:turn] = nil
   check_scores_end_game
   erb :game
 end

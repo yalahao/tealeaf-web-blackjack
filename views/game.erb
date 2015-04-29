@@ -5,6 +5,34 @@
   <h3>Round <%= session[:num_rounds] %>, dealer's turn</h3>
 <% end %>
 
+<div class="person-info" id="dealer-info">
+  <div class="row">
+    <div class="large-2 columns">
+      <h4>Dealer</h4>
+    </div>
+    <div class="large-10 columns">
+      <h4>Cards:</h4>
+    </div>
+  </div>
+  <div class="row">
+    <div class="large-2 columns">
+      <p></p>
+    </div>
+    <div class="large-10 columns">
+      <p>
+        <% if (session[:turn] != "player") || @win_msg %>
+          <% session[:dealer_cards].each do |card| %>
+            <%= display(card) %>
+          <% end %>
+        <% elsif (session[:turn] == "player") && !session[:dealer_cards].empty?  %>
+          <img src='/images/cards/cover.jpg' class='card'/>
+          <%= display(session[:dealer_cards][1]) %>
+        <% end %>
+      </p>
+    </div>
+  </div>
+</div>
+
 <div class="person-info" id="player-info">
   <div class="row">
     <div class="large-2 columns">
@@ -29,34 +57,6 @@
   </div>
 </div>
 
-<div class="person-info" id="dealer-info">
-  <div class="row">
-    <div class="large-2 columns">
-      <h4>Dealer</h4>
-    </div>
-    <div class="large-10 columns">
-      <h4>Cards:</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="large-2 columns">
-      <p></p>
-    </div>
-    <div class="large-10 columns">
-      <p>
-        <% if (session[:turn] == "dealer") || (session[:turn] == "end_game") %>
-          <% session[:dealer_cards].each do |card| %>
-            <%= display(card) %>
-          <% end %>
-        <% elsif (session[:turn] == "player") && !session[:dealer_cards].empty?  %>
-          <img src='/images/cards/cover.jpg' class='card'/>
-          <%= display(session[:dealer_cards][1]) %>
-        <% end %>
-      </p>
-    </div>
-  </div>
-</div>
-
 <% if session[:turn] == "player" %>
   <%if @set_bet %>
     <form action="/game/player/set_bet" method="post">
@@ -64,37 +64,41 @@
         <div class="large-4 columns">
           <label>How much does <%= session[:player_name] %> want to bet?</label>
           <input type="number" name="bet" min="1" max="<%= @max_bet %>" required placeholder="Min $1. Max $<%= @max_bet %>."/>
-          <input type="submit" class="button round" value="Bet" />
+          <input type="submit" class="button round small" value="Bet" />
         </div>
       </div>
     </form>
   <% end %>
-
+  <%if @update_msg %>
+    <div data-alert class="alert-box info radius">
+      <p><%= @update_msg %></p>
+    </div>
+  <% end %>
   <%if !@set_bet && !@lose_msg &&! @win_msg && !@tie_msg %>
-    <div class="button-group round">
+    <div class="button-group round small">
       <form action="/game/player/hit" method="post">
-        <input type="submit" class="button" value="Hit" />
+        <input type="submit" class="button small" value="Hit" />
       </form>
       <% if (session[:money] >= session[:bet]) && (!session[:player_cards].empty?) %>
         <form action="/game/player/double_down" method='post'>
-          <input type="submit" class="button warning" value="Double down" />
+          <input type="submit" class="button warning small" value="Double down" />
         </form>
       <% end %>
       <form action="/game/player/stay" method='post'>
-        <input type="submit" class="button success" value="Stay" />
+        <input type="submit" class="button success small" value="Stay" />
       </form>
     </div>
   <% end %>
 <% elsif session[:turn] == "dealer" %>
-  <% dealer_choice %>
+  <form action="/game/dealer/action" method="post">
+    <input type="submit" class="button round small" value="See dealer's next action" />
+  </form>
+<% elsif session[:turn] == "end_game" %>
+  <form action="/end_game" method="get">
+    <input type="submit" class="button round small" value="See final scores" />
+  </form>
 <% end %>
 
-
-<%if @update_msg %>
-  <div data-alert class="alert-box info radius">
-    <p><%= @update_msg %></p>
-  </div>
-<% end %>
 <% if @win_msg %>
   <div data-alert class="alert-box success radius">
     <p><%= @win_msg %></p>
@@ -114,11 +118,11 @@
   <div class="button-group round">
     <% if session[:money] > 0 %>
       <form action="/game/again" method="post">
-        <input type="submit" class="button" value="Play another round" />
+        <input type="submit" class="button small" value="Play another round" />
       </form>
     <% end %>
     <form action="/bye" method='post'>
-      <input type="submit" class="button alert" value="Leave" />
+      <input type="submit" class="button alert small" value="Leave" />
     </form>
   </div>
 <% end %>
