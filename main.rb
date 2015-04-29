@@ -212,7 +212,7 @@ post '/game/dealer/action' do
 end
 
 get '/end_game' do
-  session[:turn] = nil
+  session[:turn] = "final_result"
   check_scores_end_game
   erb :game
 end
