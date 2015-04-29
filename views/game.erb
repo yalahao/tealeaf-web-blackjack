@@ -65,7 +65,7 @@
     </form>
   <% end %>
 
-  <%if !@set_bet && !@lose_msg %>
+  <%if !@set_bet && !@lose_msg &&! @win_msg && !@tie_msg %>
     <div class="button-group round">
       <form action="/game/player/hit" method="post">
         <input type="submit" class="button" value="Hit" />
@@ -90,6 +90,11 @@
 <%if @update_msg %>
   <div data-alert class="alert-box info radius">
     <p><%= @update_msg %></p>
+  </div>
+<% end %>
+<% if @win_msg %>
+  <div data-alert class="alert-box success radius">
+    <p><%= @win_msg %></p>
   </div>
 <% end %>
 <%if @lose_msg %>
