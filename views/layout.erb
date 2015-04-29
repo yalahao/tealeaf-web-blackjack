@@ -11,7 +11,16 @@
   </head>
 
   <body>
-    <h2>The Blackjack Game</h2>
     <%= yield %>
+
+    <h3> Debugging zone </h3>
+    <p>
+      Player score: <%= score(session[:player_cards]) %> <br />
+      Dealer score: <%= score(session[:dealer_cards]) %> <br />
+      Win_msg: <%= @win_msg %> <br />
+      Lose_msg: <%= @lose_msg %> <br />
+      Tie_msg: <%= @tie_msg %> <br />
+    </p>
+
   </body>
 </html>

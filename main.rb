@@ -6,20 +6,26 @@ use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
                            :secret => 'dark_knight_rises'
 
-CLUB = "\u2664 ".encode('utf-8')
-HEART = "\u2661 ".encode('utf-8')
-SPADE = "\u2667 ".encode('utf-8')
-DIAMOND= "\u2662 ".encode('utf-8')
-SUITS = [CLUB, HEART, SPADE, DIAMOND]
-RANKS = %w{A 2 3 4 5 6 7 8 9 J Q K}
+SUITS = ['club', 'heart', 'spade', 'diamond']
+RANKS = %w{ace 2 3 4 5 6 7 8 9 jack queen king}
 BET_LIMIT = 100
 DECKS_OF_CARDS = 2
 BLACKJACK = 21
 DELAY = 1
 
 helpers do
+
   def display(card)
-    "[ #{card[0]} #{card[1]} ]"
+    suit = card[0]
+    rank = card[1]
+    url= "/images/cards/" + suit + "s_" + rank +".jpg"
+    "<img src='#{url}' class='card'/>"
+  end
+
+  def description(card)
+    suit = card[0]
+    rank = card[1]
+    "#{rank} of #{suit}s"
   end
 
   def score(hand)
@@ -28,10 +34,10 @@ helpers do
     total = 0
     num_a =0
     arr.each do |rank|
-      if rank == 'A'
+      if rank == 'ace'
         total += 11
         num_a += 1
-      elsif %w{J Q K}.include?(rank)
+      elsif %w{jack queen king}.include?(rank)
         total += 10
       else
         total += rank.to_i
@@ -48,6 +54,7 @@ helpers do
   def deal_card_to(person)
     session[:player_cards] << session[:deck].pop if person == "player"
     session[:dealer_cards] << session[:deck].pop if person == "dealer"
+    check_scores
   end
 
   def check_scores
@@ -62,12 +69,20 @@ helpers do
     end
   end
 
+  def end_game
+    redirect '/end_game'
+  end
+
+  def reset_round
+    @lose_msg = nil
+    @tie_msg = nil
+    @win_msg = nil
+    @update_msg = nil
+  end
+
   def dealer_choice
     if score(session[:dealer_cards]) < [17, score(session[:player_cards])].max
       deal_card_to("dealer")
-      sleep DELAY
-      check_scores
-      sleep DELAY
       dealer_choice
       erb :game
     else
@@ -79,7 +94,7 @@ helpers do
 end
 
 before do
-
+  check_scores
 end
 
 
@@ -109,24 +124,23 @@ get '/game' do
   session[:dealer_cards] = []
   session[:bet] = 0
   session[:turn] = "player"
+  reset_round
   @set_bet = true
   @max_bet = [BET_LIMIT, session[:money]].min
-  2.times {deal_card_to("player")}
-  2.times {deal_card_to("dealer")}
-  check_scores
   erb :game
 end
 
 post '/game/player/set_bet' do
   session[:bet] = params[:bet].to_i
   session[:money] -= session[:bet]
+  2.times {deal_card_to("player")}
+  2.times {deal_card_to("dealer")}
   erb :game
 end
 
 post '/game/player/hit' do
   deal_card_to("player")
-  @update_msg = "#{session[:player_name]} hit. It's #{display(session[:player_cards].last)} ."
-  check_scores
+  @update_msg = "#{session[:player_name]} hit. It's #{description(session[:player_cards].last)} ."
   erb :game
 end
 
@@ -134,8 +148,7 @@ post '/game/player/double_down' do
   session[:money] -= session[:bet]
   session[:bet] *= 2
   deal_card_to("player")
-  @update_msg = "#{session[:player_name]} doubled the bet to $#{session[:bet]} and got #{display(session[:player_cards].last)} ."
-  check_scores
+  @update_msg = "#{session[:player_name]} doubled the bet to $#{session[:bet]} and got #{description(session[:player_cards].last)} ."
   erb :game
 end
 
@@ -146,5 +159,11 @@ end
 
 post '/game/again' do
   session[:num_rounds] += 1
+  reset_round
   redirect "/game"
+end
+
+get '/end_game' do
+  reset_round
+  erb :game
 end

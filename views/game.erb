@@ -44,8 +44,13 @@
     </div>
     <div class="large-10 columns">
       <p>
-        <% session[:dealer_cards].each do |card| %>
-          <%= display(card) %>
+        <% if session[:turn] == "dealer" %>
+          <% session[:dealer_cards].each do |card| %>
+            <%= display(card) %>
+          <% end %>
+        <% elsif (session[:turn] == "player") && !session[:dealer_cards].empty?  %>
+          <img src='/images/cards/cover.jpg' class='card'/>
+          <%= display(session[:dealer_cards][1]) %>
         <% end %>
       </p>
     </div>
@@ -72,7 +77,7 @@
       </form>
       <%if (session[:money] >= session[:bet]) && (session[:player_cards].count > 2) %>
         <form action="/game/player/double_down" method='post'>
-          <input type="submit" class="button alert" value="Double down" />
+          <input type="submit" class="button warning" value="Double down" />
         </form>
       <% end %>
       <form action="/game/player/stay" method='post'>
@@ -117,6 +122,12 @@
     </form>
   </div>
 <% end %>
+
+
+
+
+
+
 
 
 
