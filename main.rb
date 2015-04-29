@@ -118,10 +118,10 @@ helpers do
     money_diff = session[:money] - 1000
     if money_diff > 0
       "After round #{session[:num_rounds]}, #{session[:player_name]} left with $#{money_diff} extra money in the pocket!"
+    elsif money_diff == -1000
+      "After round #{session[:num_rounds]}, #{session[:player_name]} lost all his money..."
     elsif money_diff < 0
       "After round #{session[:num_rounds]}, #{session[:player_name]} left with $#{money_diff.abs} loss..."
-    elsif money_diff == 1000
-      "After round #{session[:num_rounds]}, #{session[:player_name]} lost all his money..."
     else
       "After round #{session[:num_rounds]}, #{session[:player_name]} left."
     end

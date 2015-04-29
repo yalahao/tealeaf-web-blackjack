@@ -112,15 +112,18 @@
 <% end %>
 <% if (@win_msg || @lose_msg || @tie_msg) %>
   <div class="button-group round">
-    <form action="/game/again" method="post">
-      <input type="submit" class="button" value="Play another round" />
-    </form>
+    <% if session[:money] > 0 %>
+      <form action="/game/again" method="post">
+        <input type="submit" class="button" value="Play another round" />
+      </form>
+    <% end %>
     <form action="/bye" method='post'>
       <input type="submit" class="button alert" value="Leave" />
     </form>
   </div>
 <% end %>
 
+<!--
 <h3> Debugging zone </h3>
 <p>
   Player score: <%= score(session[:player_cards]) %> <br />
@@ -129,3 +132,4 @@
   Lose_msg: <%= @lose_msg %> <br />
   Tie_msg: <%= @tie_msg %> <br />
 </p>
+-->
