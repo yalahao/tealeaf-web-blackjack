@@ -50,11 +50,32 @@ helpers do
     session[:dealer_cards] << session[:deck].pop if person == "dealer"
   end
 
-  def check_player_score
+  def check_scores
     if score(session[:player_cards]) > 21
-      @busted_msg = "#{session[:player_name]} busted and lost #{session[:bet]}..."
+      @lose_msg = "#{session[:player_name]} busted and lost $#{session[:bet]}..."
+    elsif (score(session[:player_cards]) == 21) && (score(session[:dealer_cards]) == 21)
+      @tie_msg = "#{session[:player_name]} and dealer both hit blackjack. It's a tie."
+    elsif score(session[:player_cards]) == 21
+      @win_msg = "#{session[:player_name]} hit blackjack and won $#{session[:bet]}!"
+    elsif score(session[:dealer_cards]) == 21
+      @lose_msg = "Dealer hit blackjack! #{session[:player_name]} lost $#{session[:bet]}..."
     end
   end
+
+  def dealer_choice
+    if score(session[:dealer_cards]) < [17, score(session[:player_cards])].max
+      deal_card_to("dealer")
+      sleep DELAY
+      check_scores
+      sleep DELAY
+      dealer_choice
+      erb :game
+    else
+      @update_msg = "Dealer stayed."
+      redirect "/end_game"
+    end
+  end
+
 end
 
 before do
@@ -87,10 +108,12 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] = []
   session[:bet] = 0
+  session[:turn] = "player"
   @set_bet = true
   @max_bet = [BET_LIMIT, session[:money]].min
   2.times {deal_card_to("player")}
   2.times {deal_card_to("dealer")}
+  check_scores
   erb :game
 end
 
@@ -102,8 +125,8 @@ end
 
 post '/game/player/hit' do
   deal_card_to("player")
-  @hit_msg = "#{session[:player_name]} hit. It's #{display(session[:player_cards].last)} ."
-  check_player_score
+  @update_msg = "#{session[:player_name]} hit. It's #{display(session[:player_cards].last)} ."
+  check_scores
   erb :game
 end
 
@@ -111,15 +134,17 @@ post '/game/player/double_down' do
   session[:money] -= session[:bet]
   session[:bet] *= 2
   deal_card_to("player")
-  @hit_msg = "#{session[:player_name]} doubled the bet to #{session[:bet]} and got #{display(session[:player_cards].last)} ."
-  check_player_score
+  @update_msg = "#{session[:player_name]} doubled the bet to $#{session[:bet]} and got #{display(session[:player_cards].last)} ."
+  check_scores
   erb :game
 end
 
 post '/game/player/stay' do
-
+  session[:turn] = "dealer"
+  erb :game
 end
 
 post '/game/again' do
+  session[:num_rounds] += 1
   redirect "/game"
 end

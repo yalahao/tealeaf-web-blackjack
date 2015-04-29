@@ -1,4 +1,9 @@
-<h3>Round <%= session[:num_rounds] %>, <%= session[:player_name] %>'s turn</h3>
+
+<% if session[:turn] == "player" %>
+  <h3>Round <%= session[:num_rounds] %>, <%= session[:player_name] %>'s turn</h3>
+<% else %>
+  <h3>Round <%= session[:num_rounds] %>, dealer's turn</h3>
+<% end %>
 
 <div class="person-info" id="player-info">
   <div class="row">
@@ -47,42 +52,49 @@
   </div>
 </div>
 
-<%if @set_bet %>
-  <form action="/game/player/set_bet" method="post">
-    <div class="row">
-      <div class="large-4 columns">
-        <label>How much does <%= session[:player_name] %> want to bet?</label>
-        <input type="number" name="bet" min="1" max="<%= @max_bet %>" required placeholder="Min $1. Max $<%= @max_bet %>."/>
-        <input type="submit" class="button" value="Bet" />
+<% if session[:turn] == "player" %>
+  <%if @set_bet %>
+    <form action="/game/player/set_bet" method="post">
+      <div class="row">
+        <div class="large-4 columns">
+          <label>How much does <%= session[:player_name] %> want to bet?</label>
+          <input type="number" name="bet" min="1" max="<%= @max_bet %>" required placeholder="Min $1. Max $<%= @max_bet %>."/>
+          <input type="submit" class="button round" value="Bet" />
+        </div>
       </div>
-    </div>
-  </form>
-<% end %>
-
-<%if !@set_bet && !@busted_msg %>
-  <div class="button-group round">
-    <form action="/game/player/hit" method="post">
-      <input type="submit" class="button" value="Hit" />
     </form>
-    <%if (session[:money] >= session[:bet]) && (session[:player_cards].count > 2) %>
-      <form action="/game/player/double_down" method='post'>
-        <input type="submit" class="button alert" value="Double down" />
+  <% end %>
+
+  <%if !@set_bet && !@lose_msg %>
+    <div class="button-group round">
+      <form action="/game/player/hit" method="post">
+        <input type="submit" class="button" value="Hit" />
       </form>
-    <% end %>
-    <form action="/game/player/stay" method='post'>
-      <input type="submit" class="button success" value="Stay" />
-    </form>
-  </div>
+      <%if (session[:money] >= session[:bet]) && (session[:player_cards].count > 2) %>
+        <form action="/game/player/double_down" method='post'>
+          <input type="submit" class="button alert" value="Double down" />
+        </form>
+      <% end %>
+      <form action="/game/player/stay" method='post'>
+        <input type="submit" class="button success" value="Stay" />
+      </form>
+    </div>
+  <% end %>
+<% else %>
+  <% sleep DELAY %>
+  <% check_scores %>
+  <% dealer_choice %>
 <% end %>
 
-<%if @hit_msg %>
+
+<%if @update_msg %>
   <div data-alert class="alert-box info radius">
-    <p><%= @hit_msg %></p>
+    <p><%= @update_msg %></p>
   </div>
 <% end %>
-<%if @busted_msg %>
+<%if @lose_msg %>
   <div data-alert class="alert-box alert radius">
-    <p><%= @busted_msg %></p>
+    <p><%= @lose_msg %></p>
   </div>
   <div class="button-group round">
     <form action="/game/again" method="post">
@@ -93,5 +105,7 @@
     </form>
   </div>
 <% end %>
+
+
 
 
