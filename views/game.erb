@@ -44,7 +44,7 @@
     </div>
     <div class="large-10 columns">
       <p>
-        <% if session[:turn] == "dealer" %>
+        <% if (session[:turn] == "dealer") || (session[:turn] == "end_game") %>
           <% session[:dealer_cards].each do |card| %>
             <%= display(card) %>
           <% end %>
@@ -85,9 +85,7 @@
       </form>
     </div>
   <% end %>
-<% else %>
-  <% sleep DELAY %>
-  <% check_scores %>
+<% elsif session[:turn] == "dealer" %>
   <% dealer_choice %>
 <% end %>
 
@@ -115,20 +113,19 @@
 <% if (@win_msg || @lose_msg || @tie_msg) %>
   <div class="button-group round">
     <form action="/game/again" method="post">
-      <input type="submit" class="button" value="Play Again" />
+      <input type="submit" class="button" value="Play another round" />
     </form>
-    <form action="/game/end" method='post'>
+    <form action="/bye" method='post'>
       <input type="submit" class="button alert" value="Leave" />
     </form>
   </div>
 <% end %>
 
-
-
-
-
-
-
-
-
-
+<h3> Debugging zone </h3>
+<p>
+  Player score: <%= score(session[:player_cards]) %> <br />
+  Dealer score: <%= score(session[:dealer_cards]) %> <br />
+  Win_msg: <%= @win_msg %> <br />
+  Lose_msg: <%= @lose_msg %> <br />
+  Tie_msg: <%= @tie_msg %> <br />
+</p>

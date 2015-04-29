@@ -67,18 +67,40 @@ helpers do
     elsif score(session[:dealer_cards]) == 21
       @lose_msg = "Dealer hit blackjack! #{session[:player_name]} lost $#{session[:bet]}..."
     end
+    update_bet
   end
 
-  def end_game
-    redirect '/end_game'
+  def check_scores_end_game
+    player_score = score(session[:player_cards])
+    dealer_score = score(session[:dealer_cards])
+    scores_msg = "#{session[:player_name]} scored #{player_score}. Dealer scored #{dealer_score}. "
+    if dealer_score > 21
+      @win_msg = "Dealer busted! #{session[:player_name]} won $#{session[:bet]}!"
+    elsif player_score > dealer_score
+      @win_msg = scores_msg + "#{session[:player_name]} won $#{session[:bet]}!"
+    elsif player_score < dealer_score
+      @lose_msg = scores_msg + "#{session[:player_name]} lost $#{session[:bet]}!"
+    else
+      @tie_msg = scores_msg + "It's a tie."
+    end
+    update_bet
   end
 
-  def reset_round
+  def reset_msg
     @lose_msg = nil
     @tie_msg = nil
     @win_msg = nil
     @update_msg = nil
   end
+
+  def update_bet
+    if @win_msg
+      session[:money] += (session[:bet] * 2)
+    elsif @tie_msg
+      session[:money] += session[:bet]
+    end
+  end
+
 
   def dealer_choice
     if score(session[:dealer_cards]) < [17, score(session[:player_cards])].max
@@ -87,14 +109,28 @@ helpers do
       erb :game
     else
       @update_msg = "Dealer stayed."
+      session[:turn] = "end_game"
       redirect "/end_game"
+    end
+  end
+
+  def ending
+    money_diff = session[:money] - 1000
+    if money_diff > 0
+      "After round #{session[:num_rounds]}, #{session[:player_name]} left with $#{money_diff} extra money in the pocket!"
+    elsif money_diff < 0
+      "After round #{session[:num_rounds]}, #{session[:player_name]} left with $#{money_diff.abs} loss..."
+    elsif money_diff == 1000
+      "After round #{session[:num_rounds]}, #{session[:player_name]} lost all his money..."
+    else
+      "After round #{session[:num_rounds]}, #{session[:player_name]} left."
     end
   end
 
 end
 
 before do
-  check_scores
+
 end
 
 
@@ -123,8 +159,8 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] = []
   session[:bet] = 0
-  session[:turn] = "player"
-  reset_round
+  session[:turn] = "player" #"player", "dealer", 'end_game'
+  reset_msg
   @set_bet = true
   @max_bet = [BET_LIMIT, session[:money]].min
   erb :game
@@ -159,11 +195,16 @@ end
 
 post '/game/again' do
   session[:num_rounds] += 1
-  reset_round
+  reset_msg
   redirect "/game"
 end
 
 get '/end_game' do
-  reset_round
+  check_scores_end_game
   erb :game
+end
+
+post '/bye' do
+  reset_msg
+  erb :bye
 end
