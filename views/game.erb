@@ -13,7 +13,6 @@
     <div class="large-2 columns">
       <p>Money: $<%= session[:money] %></p>
       <p>Current bet: $<%= session[:bet] %></p>
-      <p>Score: <%= score(session[:player_cards]) %></p>
     </div>
     <div class="large-10 columns">
       <p>
@@ -48,7 +47,7 @@
   </div>
 </div>
 
-<div class="button-group radius">
+<div class="button-group round">
   <form action="/game/player/hit" method="post">
     <input type="submit" class="button" value="Hit" />
   </form>
@@ -60,10 +59,4 @@
   </form>
 </div>
 
-<div class="updates">
-  <p>Hal hit. It's A of Diamond!</p>
-</div>
 
-<% session[:deck].each do |card| %>
-  <%= display(card) %>
-<% end %>

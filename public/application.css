@@ -13,3 +13,7 @@ body {
 .radius {
   border-radius: 20px;
 }
+
+.alert-box {
+  font-size: rem-calc(18);
+}
