@@ -97,16 +97,23 @@
     <p><%= @win_msg %></p>
   </div>
 <% end %>
-<%if @lose_msg %>
+<% if @lose_msg %>
   <div data-alert class="alert-box alert radius">
     <p><%= @lose_msg %></p>
   </div>
+<% end %>
+<% if @tie_msg %>
+  <div data-alert class="alert-box secondary radius">
+    <p><%= @tie_msg %></p>
+  </div>
+<% end %>
+<% if (@win_msg || @lose_msg || @tie_msg) %>
   <div class="button-group round">
     <form action="/game/again" method="post">
-      <input type="submit" class="button success" value="Play Again" />
+      <input type="submit" class="button" value="Play Again" />
     </form>
     <form action="/game/end" method='post'>
-      <input type="submit" class="button alert" value="Leave" />
+      <input type="submit" class="button warning" value="Leave" />
     </form>
   </div>
 <% end %>
