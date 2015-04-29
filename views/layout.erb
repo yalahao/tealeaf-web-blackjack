@@ -13,10 +13,5 @@
   <body>
     <h2>The Blackjack Game</h2>
     <%= yield %>
-    <%if @hit_msg %>
-      <div data-alert class="alert-box radius">
-        <p><%= @hit_msg %></p>
-      </div>
-    <% end %>
   </body>
 </html>

@@ -81,6 +81,8 @@ get '/game' do
   session[:deck] = SUITS.product(RANKS).shuffle!
   session[:player_cards] = []
   session[:dealer_cards] = []
+  session[:bet] = 0
+  @set_bet = true    
   2.times {deal_card_to("player")}
   2.times {deal_card_to("dealer")}
   erb :game
@@ -89,6 +91,9 @@ end
 post '/game/player/hit' do
   deal_card_to("player")
   @hit_msg = "#{session[:player_name]} hit. It's #{display(session[:player_cards].last)} ."
+  if score(session[:player_cards]) > 21
+    @busted_msg = "#{session[:player_name]} busted and lost #{session[:bet]}..."
+  end
   erb :game
 end
 
@@ -98,4 +103,8 @@ end
 
 post '/game/player/stay' do
 
+end
+
+post '/game/again' do
+  redirect "/game"
 end

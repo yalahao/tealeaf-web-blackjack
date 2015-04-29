@@ -47,16 +47,40 @@
   </div>
 </div>
 
-<div class="button-group round">
-  <form action="/game/player/hit" method="post">
-    <input type="submit" class="button" value="Hit" />
-  </form>
-  <form action="/game/player/double_down" method='post'>
-    <input type="submit" class="button alert" value="Double down" />
-  </form>
-  <form action="/game/player/stay" method='post'>
-    <input type="submit" class="button success" value="Stay" />
-  </form>
-</div>
+<%if @set_bet %>
+
+<% end %>
+<%if !@busted_msg %>
+  <div class="button-group round">
+    <form action="/game/player/hit" method="post">
+      <input type="submit" class="button" value="Hit" />
+    </form>
+    <form action="/game/player/double_down" method='post'>
+      <input type="submit" class="button alert" value="Double down" />
+    </form>
+    <form action="/game/player/stay" method='post'>
+      <input type="submit" class="button success" value="Stay" />
+    </form>
+  </div>
+<% end %>
+
+<%if @hit_msg %>
+  <div data-alert class="alert-box info radius">
+    <p><%= @hit_msg %></p>
+  </div>
+<% end %>
+<%if @busted_msg %>
+  <div data-alert class="alert-box alert radius">
+    <p><%= @busted_msg %></p>
+  </div>
+  <div class="button-group round">
+    <form action="/game/again" method="post">
+      <input type="submit" class="button success" value="Play Again" />
+    </form>
+    <form action="/game/end" method='post'>
+      <input type="submit" class="button alert" value="Leave" />
+    </form>
+  </div>
+<% end %>
 
 
