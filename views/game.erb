@@ -1,4 +1,3 @@
-
 <% if session[:turn] == "player" %>
   <h3>Round <%= session[:num_rounds] %>, <%= session[:player_name] %>'s turn</h3>
 <% else %>
@@ -57,6 +56,13 @@
   </div>
 </div>
 
+<%if @update_msg %>
+  <div data-alert class="alert-box info radius">
+    <p><%= @update_msg %></p>
+  </div>
+<% end %>
+
+<!-- Action buttons begin -->
 <% if session[:turn] == "player" %>
   <%if @set_bet %>
     <form action="/game/player/set_bet" method="post">
@@ -68,11 +74,6 @@
         </div>
       </div>
     </form>
-  <% end %>
-  <%if @update_msg %>
-    <div data-alert class="alert-box info radius">
-      <p><%= @update_msg %></p>
-    </div>
   <% end %>
   <%if !@set_bet && !@lose_msg &&! @win_msg && !@tie_msg %>
     <div class="button-group round small">
@@ -94,10 +95,11 @@
     <input type="submit" class="button round small" value="See dealer's next action" />
   </form>
 <% elsif session[:turn] == "end_game" %>
-  <form action="/end_game" method="get">
+  <form action="/end_result" method="get">
     <input type="submit" class="button round small" value="See final scores" />
   </form>
 <% end %>
+<!-- Action buttons end -->
 
 <% if @win_msg %>
   <div data-alert class="alert-box success radius">
