@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'sinatra'
-require 'pry'
 
 use Rack::Session::Cookie, :key => 'rack.session',
                            :path => '/',
@@ -37,10 +36,8 @@ helpers do
       if rank == 'ace'
         total += 11
         num_a += 1
-      elsif %w{jack queen king}.include?(rank)
-        total += 10
       else
-        total += rank.to_i
+        total += rank.to_i == 0 ? 10 : rank.to_i
       end
     end
     #correct for Aces
@@ -158,7 +155,7 @@ get '/game' do
   session[:player_cards] = []
   session[:dealer_cards] = []
   session[:bet] = 0
-  session[:turn] = "player" #"player", "dealer", 'end_game'
+  session[:turn] = "player" #"player", "dealer", 'end_result'
   reset_msg
   @set_bet = true
   @max_bet = [BET_LIMIT, session[:money]].min
