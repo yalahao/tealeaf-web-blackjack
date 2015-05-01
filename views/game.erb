@@ -64,21 +64,21 @@
   <% end %>
   <%if !@set_bet && !@lose_msg &&! @win_msg && !@tie_msg %>
     <div class="button-group round small">
-      <form id="player_hit" action="/game/player/hit" method="post">
+      <form id="player_hit">
         <input type="submit" class="button small" value="Hit" />
       </form>
       <% if (session[:money] >= session[:bet]) && (!session[:player_cards].empty?) %>
-        <form id="player_double_down" action="/game/player/double_down" method='post'>
+        <form id="player_double_down">
           <input type="submit" class="button warning small" value="Double down" />
         </form>
       <% end %>
-      <form action="/game/player/stay" method='post'>
+      <form id="player_stay">
         <input type="submit" class="button success small" value="Stay" />
       </form>
     </div>
   <% end %>
 <% elsif session[:turn] == "dealer" %>
-  <form action="/game/dealer/action" method="post">
+  <form id="dealer_action">
     <input type="submit" class="button round small" value="See dealer's next action" />
   </form>
 <% elsif session[:turn] == "end_game" %>

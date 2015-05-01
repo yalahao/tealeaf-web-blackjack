@@ -187,7 +187,7 @@ end
 post '/game/player/stay' do
   session[:turn] = "dealer"
   @update_msg = "Dealer's turn."
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/again' do
@@ -203,7 +203,7 @@ post '/game/dealer/action' do
   else
     redirect '/end_result'
   end
-  erb :game
+  erb :game, layout: false;
 end
 
 get '/end_result' do
