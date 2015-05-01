@@ -10,15 +10,7 @@
       <h4>Dealer</h4>
     </div>
     <div class="large-10 columns">
-      <h4>Cards:</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="large-2 columns">
-      <p></p>
-    </div>
-    <div class="large-10 columns">
-      <p>
+        <p>
         <% if (session[:turn] != "player") || @win_msg %>
           <% session[:dealer_cards].each do |card| %>
             <%= display(card) %>
@@ -36,18 +28,12 @@
   <div class="row">
     <div class="large-2 columns">
       <h4><%= session[:player_name] %></h4>
-    </div>
-    <div class="large-10 columns">
-      <h4>Cards:</h4>
-    </div>
-  </div>
-  <div class="row">
-    <div class="large-2 columns">
       <p>Money: $<%= session[:money] %></p>
       <p>Current bet: $<%= session[:bet] %></p>
+      <p>Score: <%= score(session[:player_cards]) %></p>
     </div>
     <div class="large-10 columns">
-      <p>
+        <p>
         <% session[:player_cards].each do |card| %>
           <%= display(card) %>
         <% end %>
