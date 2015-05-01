@@ -1,3 +1,4 @@
+<div id="game">
 <% if session[:turn] == "player" %>
   <h3>Round <%= session[:num_rounds] %>, <%= session[:player_name] %>'s turn</h3>
 <% else %>
@@ -63,11 +64,11 @@
   <% end %>
   <%if !@set_bet && !@lose_msg &&! @win_msg && !@tie_msg %>
     <div class="button-group round small">
-      <form action="/game/player/hit" method="post">
+      <form id="player_hit" action="/game/player/hit" method="post">
         <input type="submit" class="button small" value="Hit" />
       </form>
       <% if (session[:money] >= session[:bet]) && (!session[:player_cards].empty?) %>
-        <form action="/game/player/double_down" method='post'>
+        <form id="player_double_down" action="/game/player/double_down" method='post'>
           <input type="submit" class="button warning small" value="Double down" />
         </form>
       <% end %>
@@ -125,3 +126,4 @@
   Tie_msg: <%= @tie_msg %> <br />
 </p>
 -->
+</div>

@@ -173,7 +173,7 @@ end
 post '/game/player/hit' do
   deal_card_to("player")
   @update_msg = "#{session[:player_name]} hit. It's #{description(session[:player_cards].last)}."
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/player/double_down' do
@@ -181,7 +181,7 @@ post '/game/player/double_down' do
   session[:bet] *= 2
   deal_card_to("player")
   @update_msg = "#{session[:player_name]} doubled the bet to $#{session[:bet]} and got #{description(session[:player_cards].last)} ."
-  erb :game
+  erb :game, layout: false
 end
 
 post '/game/player/stay' do
