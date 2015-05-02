@@ -9,7 +9,6 @@ SUITS = ['club', 'heart', 'spade', 'diamond']
 RANKS = %w{ace 2 3 4 5 6 7 8 9 jack queen king}
 BET_LIMIT = 100
 DECKS_OF_CARDS = 2
-BLACKJACK = 21
 DELAY = 1
 
 helpers do
@@ -81,11 +80,16 @@ helpers do
     update_bet
   end
 
+=begin
   def reset_msg
     @lose_msg = nil
     @tie_msg = nil
     @win_msg = nil
     @update_msg = nil
+  end
+=end
+
+  def reset_msg
   end
 
   def update_bet
@@ -126,27 +130,30 @@ helpers do
 end
 
 before do
-
+  erb :new if !session[:player_name]
 end
 
-
 get '/' do
-  if session[:player_name]
-    redirect '/game'
-  else
+  if !session[:player_name]
     redirect '/new'
+  else
+    redirect '/game'
   end
 end
 
 get '/new' do
+  session[:num_rounds] = 1
+  session[:money] = 1000
+  session[:bet] = 0
   erb :new
 end
 
 post '/set_name' do
+  if params[:player_name].empty?
+    @error = "You need to enter a name."
+    halt erb(:new)
+  end
   session[:player_name] = params[:player_name]
-  session[:num_rounds] = 1
-  session[:money] = 1000
-  session[:bet] = 0
   redirect '/game'
 end
 

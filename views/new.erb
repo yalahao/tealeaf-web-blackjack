@@ -5,6 +5,11 @@
     <div class="large-2 columns">
       <form action='/set_name' method='post'>
         <input type='text' name='player_name' required />
+        <% if @error %>
+          <div data-alert class="alert-box warning radius">
+            <p><%= "#{@error}" %></p>
+          </div>
+        <% end %>
         <input type='submit' class='button round small' value='Play'/>
     </div>
   </div>
