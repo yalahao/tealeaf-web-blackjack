@@ -80,18 +80,6 @@ helpers do
     update_bet
   end
 
-=begin
-  def reset_msg
-    @lose_msg = nil
-    @tie_msg = nil
-    @win_msg = nil
-    @update_msg = nil
-  end
-=end
-
-  def reset_msg
-  end
-
   def update_bet
     if @win_msg
       session[:money] += (session[:bet] * 2)
@@ -163,7 +151,6 @@ get '/game' do
   session[:dealer_cards] = []
   session[:bet] = 0
   session[:turn] = "player" #"player", "dealer", 'end_result'
-  reset_msg
   @set_bet = true
   @max_bet = [BET_LIMIT, session[:money]].min
   erb :game
@@ -199,7 +186,6 @@ end
 
 post '/game/again' do
   session[:num_rounds] += 1
-  reset_msg
   redirect "/game"
 end
 
@@ -223,6 +209,5 @@ get '/end_result' do
 end
 
 post '/bye' do
-  reset_msg
   erb :bye
 end
