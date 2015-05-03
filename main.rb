@@ -90,7 +90,7 @@ helpers do
 
 
   def dealer_choice
-    if score(session[:dealer_cards]) < [17, score(session[:player_cards])].max
+    if score(session[:dealer_cards]) < 17
       deal_card_to("dealer")
       @update_msg = "Dealer hit. It's #{description(session[:dealer_cards].last)}."
     elsif score(session[:dealer_cards]) > 21
